@@ -117,3 +117,12 @@ class NoFireMod(JaxAtariInternalModPlugin):
     attribute_overrides = {
         "ACTION_SET": jnp.array([Action.NOOP, Action.RIGHT, Action.LEFT], dtype=jnp.int32),
     }
+
+
+class SmallPaddleMod(JaxAtariInternalModPlugin):
+    """Reduces the player paddle height from 16 to 8 pixels, making the game harder.
+    PADDLE_MAX_Y is raised by 8 so the smaller paddle can still reach the same bottom boundary."""
+    constants_overrides = {
+        "PLAYER_SIZE": (4, 8),
+        "PADDLE_MAX_Y": 198.0,
+    }

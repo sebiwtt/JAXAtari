@@ -18,6 +18,12 @@ def _create_wall_sprite(consts: "PongConstants", height: int) -> jnp.ndarray:
     wall_shape = (height, consts.WIDTH, 4)
     return jnp.tile(jnp.array(wall_color_rgba, dtype=jnp.uint8), (*wall_shape[:2], 1))
 
+def _create_paddle_sprite(color: tuple, size: tuple) -> jnp.ndarray:
+    """Create a solid-color paddle sprite of (width, height) = size."""
+    h, w = size[1], size[0]
+    color_rgba = (*color, 255)
+    return jnp.tile(jnp.array(color_rgba, dtype=jnp.uint8), (h, w, 1))
+
 def _get_default_asset_config() -> tuple:
     return (
         {'name': 'background', 'type': 'background', 'file': 'background.npy'},
@@ -515,8 +521,16 @@ class PongRenderer(JAXGameRenderer):
         # 2. Create procedural assets using modded constants
         wall_sprite_top = _create_wall_sprite(self.consts, self.consts.WALL_TOP_HEIGHT)
         wall_sprite_bottom = _create_wall_sprite(self.consts, self.consts.WALL_BOTTOM_HEIGHT)
+        player_sprite = _create_paddle_sprite(self.consts.PLAYER_COLOR, self.consts.PLAYER_SIZE)
 
-        # 3. Append procedural assets
+        # 3. Replace the file-based player entry with a procedural one so PLAYER_SIZE is respected
+        final_asset_config = [
+            {'name': 'player', 'type': 'procedural', 'data': player_sprite}
+            if entry.get('name') == 'player' else entry
+            for entry in final_asset_config
+        ]
+
+        # 4. Append remaining procedural assets
         final_asset_config.append({'name': 'wall_top', 'type': 'procedural', 'data': wall_sprite_top})
         final_asset_config.append({'name': 'wall_bottom', 'type': 'procedural', 'data': wall_sprite_bottom})
 
