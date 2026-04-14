@@ -27,7 +27,7 @@ from omegaconf import OmegaConf
 import jaxatari
 import wandb
 
-from train_utils import video_callback, save_params
+from train_utils import video_callback, save_params, load_params
 
 class CNN(nn.Module):
 
@@ -129,6 +129,60 @@ class CustomTrainState(TrainState):
     grad_steps: int = 0
 
 
+def eps_greedy_exploration(rng, q_vals, eps):
+    rng_a, rng_e = jax.random.split(
+        rng
+    )  # a key for sampling random actions and one for picking
+    greedy_actions = jnp.argmax(q_vals, axis=-1)
+    chosed_actions = jnp.where(
+        jax.random.uniform(rng_e, greedy_actions.shape)
+        < eps,  # pick the actions that should be random
+        jax.random.randint(
+            rng_a, shape=greedy_actions.shape, minval=0, maxval=q_vals.shape[-1]
+        ),  # sample random actions,
+        greedy_actions,
+    )
+    return chosed_actions
+
+
+def evaluate(params, batch_stats, network, env, config, num_episodes):
+    """Run the agent for num_episodes full episodes and return the mean episode return.
+
+    Plain Python loop over a single environment — not inside jax.lax.scan.
+    Uses eps_greedy_exploration with EPS_TEST (default 0 = greedy).
+    """
+    rng = jax.random.PRNGKey(config["SEED"] + 42000)
+    eps = config.get("EPS_TEST", 0.0)
+    max_steps = config.get("TEST_NUM_STEPS", 10000)
+    episode_returns = []
+
+    for _ in range(num_episodes):
+        rng, reset_rng = jax.random.split(rng)
+        obs, env_state = env.reset(reset_rng)
+        episode_return = 0.0
+        done = False
+        step_count = 0
+
+        while not done and step_count < max_steps:
+            q_vals = network.apply(
+                {"params": params, "batch_stats": batch_stats},
+                obs[None, ...],
+                train=False,
+            )
+            rng, action_rng = jax.random.split(rng)
+            action = eps_greedy_exploration(action_rng, q_vals[0], eps)
+            obs, env_state, reward, terminated, truncated, info = env.step(
+                env_state, action
+            )
+            done = bool(jnp.logical_or(terminated, truncated))
+            episode_return += float(reward)
+            step_count += 1
+
+        episode_returns.append(episode_return)
+
+    return float(np.mean(episode_returns))
+
+
 def make_train(config):
 
     config["NUM_UPDATES"] = (
@@ -176,22 +230,6 @@ def make_train(config):
     env = apply_wrappers(env)
     mod_env = apply_wrappers(mod_env)
 
-    # epsilon-greedy exploration
-    def eps_greedy_exploration(rng, q_vals, eps):
-        rng_a, rng_e = jax.random.split(
-            rng
-        )  # a key for sampling random actions and one for picking
-        greedy_actions = jnp.argmax(q_vals, axis=-1)
-        chosed_actions = jnp.where(
-            jax.random.uniform(rng_e, greedy_actions.shape)
-            < eps,  # pick the actions that should be random
-            jax.random.randint(
-                rng_a, shape=greedy_actions.shape, minval=0, maxval=q_vals.shape[-1]
-            ),  # sample random actions,
-            greedy_actions,
-        )
-        return chosed_actions
-
     def train(rng):
 
         original_rng = rng[0]
@@ -224,6 +262,21 @@ def make_train(config):
         def create_agent(rng):
             init_x = jnp.zeros((1, *env.observation_space().shape))
             network_variables = network.init(rng, init_x, train=False)
+
+            # Optional: initialise from a saved checkpoint for finetuning.
+            load_ckpt = config.get("LOAD_CHECKPOINT", None)
+            if load_ckpt is not None:
+                init_params = jax.tree_util.tree_map(
+                    jnp.array, load_params(load_ckpt)
+                )
+                init_bs = jax.tree_util.tree_map(
+                    jnp.array,
+                    load_params(load_ckpt.replace(".safetensors", "_bs.safetensors")),
+                )
+            else:
+                init_params = network_variables["params"]
+                init_bs = network_variables["batch_stats"]
+
             tx = optax.chain(
                 optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
                 optax.radam(learning_rate=lr),
@@ -231,8 +284,8 @@ def make_train(config):
 
             train_state = CustomTrainState.create(
                 apply_fn=network.apply,
-                params=network_variables["params"],
-                batch_stats=network_variables["batch_stats"],
+                params=init_params,
+                batch_stats=init_bs,
                 tx=tx,
             )
             return train_state
@@ -438,8 +491,11 @@ def make_train(config):
                                 for k, v in metrics.items()
                             }
                         )
-                    # wandb.log(metrics, step=metrics["update_steps"])
-                    wandb.log(metrics, step=metrics["env_step"])
+                    prefix = config.get("LOG_PREFIX", "")
+                    step = metrics["env_step"]
+                    if prefix:
+                        metrics = {f"{prefix}/{k}": v for k, v in metrics.items()}
+                    wandb.log(metrics, step=step)
 
                 jax.debug.callback(callback, metrics, original_rng)
 
@@ -671,7 +727,189 @@ def generate_final_video(config, params, batch_stats, seed_idx=0, env_step=None)
         )
 
 
-#TODO: 
+def continual_experiment(config):
+    """Continual RL experiment: measure forgetting as a function of environment shift magnitude.
+
+    Step 1 — train (or load) a base agent on T0 (no mod) and save checkpoint C0.
+    Step 2 — for each mod in CONTINUAL_MODS (T1 … TN):
+        * finetune from C0 on Tk for FINETUNE_TIMESTEPS steps
+        * evaluate the finetuned agent on both T0 and Tk
+        * log retention = score_on_T0 / base_score_on_T0
+    Finally log a summary wandb.Table across all tasks.
+    """
+    config = {**config, **config["alg"]}
+
+    alg_name = config.get("ALG_NAME", "pqn")
+    env_name = config["ENV_NAME"]
+
+    wandb.init(
+        entity=config["ENTITY"],
+        project=config["PROJECT"],
+        tags=[alg_name.upper(), env_name.upper(), f"jax_{jax.__version__}", "continual"],
+        name=config.get("NAME", f"{alg_name}_{env_name}_continual"),
+        config=config,
+        mode=config["WANDB_MODE"],
+    )
+
+    continual_mods = config.get("CONTINUAL_MODS", [])
+    eval_num_episodes = config.get("EVAL_NUM_EPISODES", 20)
+
+    # ------------------------------------------------------------------
+    # Helper: build a fully-wrapped eval env (single env, no vmap)
+    # ------------------------------------------------------------------
+    def _make_eval_env(mod_name=None):
+        mods = [mod_name] if mod_name else None
+        env = jaxatari.make(config["ENV_NAME"].lower(), mods=mods)
+        env = AtariWrapper(env)
+        if config.get("OBJECT_CENTRIC", False):
+            env = ObjectCentricWrapper(env)
+            env = FlattenObservationWrapper(env)
+        else:
+            grayscale = config.get("PIXEL_GRAYSCALE", True)
+            do_resize = config.get("PIXEL_RESIZE", True)
+            resize_shape = config.get("PIXEL_RESIZE_SHAPE", [84, 84])
+            use_native_downscaling = config.get("USE_NATIVE_DOWNSCALING", True)
+            env = PixelObsWrapper(
+                env,
+                do_pixel_resize=do_resize,
+                pixel_resize_shape=tuple(resize_shape),
+                grayscale=grayscale,
+                use_native_downscaling=use_native_downscaling,
+            )
+        env = NormalizeObservationWrapper(env)
+        env = LogWrapper(env)
+        return env
+
+    t0_env = _make_eval_env(None)
+    network = QNetwork(
+        action_dim=t0_env.action_space().n,
+        hidden_size=config.get("HIDDEN_SIZE", 128),
+        num_layers=config.get("NUM_LAYERS", 2),
+        norm_type=config["NORM_TYPE"],
+        norm_input=config.get("NORM_INPUT", False),
+        object_centric=config.get("OBJECT_CENTRIC", True),
+    )
+
+    # ------------------------------------------------------------------
+    # Determine canonical C0 path (params + batch_stats)
+    # ------------------------------------------------------------------
+    save_path = config.get("SAVE_PATH", None)
+    if save_path is not None:
+        c0_dir = os.path.join(save_path, env_name)
+        os.makedirs(c0_dir, exist_ok=True)
+    else:
+        c0_dir = os.path.join(os.getcwd(), ".continual_cache")
+        os.makedirs(c0_dir, exist_ok=True)
+    c0_path = os.path.join(c0_dir, f"{alg_name}_{env_name}_C0.safetensors")
+
+    # ------------------------------------------------------------------
+    # Step 1: train base agent on T0, or load from LOAD_BASE_CHECKPOINT
+    # ------------------------------------------------------------------
+    load_base = config.get("LOAD_BASE_CHECKPOINT", None)
+
+    if load_base is not None:
+        print(f"Loading base checkpoint from {load_base}")
+        params = jax.tree_util.tree_map(jnp.array, load_params(load_base))
+        batch_stats = jax.tree_util.tree_map(
+            jnp.array,
+            load_params(load_base.replace(".safetensors", "_bs.safetensors")),
+        )
+        # Re-save at canonical c0_path so finetuning loop can always use it
+        if os.path.abspath(load_base) != os.path.abspath(c0_path):
+            save_params(params, c0_path)
+            save_params(
+                batch_stats, c0_path.replace(".safetensors", "_bs.safetensors")
+            )
+    else:
+        print("Training base agent on T0 …")
+        base_config = {
+            **config,
+            "TRAIN_MODS": None,
+            "LOG_PREFIX": "base",
+            "LOAD_CHECKPOINT": None,
+        }
+        rng = jax.random.PRNGKey(config["SEED"])
+        rngs = jax.random.split(rng, config["NUM_SEEDS"])
+        train_vjit = jax.jit(jax.vmap(make_train(base_config)))
+        t_start = time.time()
+        train_vjit.lower(rngs).compile()
+        print(f"  Base compile time: {time.time() - t_start:.1f}s")
+        outs = jax.block_until_ready(train_vjit(rngs))
+        print(f"  Base training done ({time.time() - t_start:.1f}s total)")
+
+        model_state = outs["runner_state"][0]
+        params = jax.tree_util.tree_map(lambda x: x[0], model_state.params)
+        batch_stats = jax.tree_util.tree_map(lambda x: x[0], model_state.batch_stats)
+
+        save_params(params, c0_path)
+        save_params(batch_stats, c0_path.replace(".safetensors", "_bs.safetensors"))
+        print(f"  C0 saved to {c0_path}")
+
+    # Evaluate C0 on T0
+    base_score = evaluate(params, batch_stats, network, t0_env, config, eval_num_episodes)
+    print(f"Base score on T0: {base_score:.2f}")
+    wandb.log({"base/eval_score_T0": base_score})
+
+    # ------------------------------------------------------------------
+    # Step 2: finetune from C0 on each Tk, evaluate retention
+    # ------------------------------------------------------------------
+    finetune_timesteps = config.get("FINETUNE_TIMESTEPS", config["TOTAL_TIMESTEPS"])
+    results = []
+
+    for k, mod_name in enumerate(continual_mods, start=1):
+        print(f"\n=== T{k}: {mod_name} ===")
+
+        ft_config = {
+            **config,
+            "TOTAL_TIMESTEPS": finetune_timesteps,
+            "TOTAL_TIMESTEPS_DECAY": finetune_timesteps,
+            "TRAIN_MODS": [mod_name],
+            "LOG_PREFIX": f"finetune/k{k}",
+            "LOAD_CHECKPOINT": c0_path,
+        }
+
+        rng = jax.random.PRNGKey(config["SEED"] + k * 1000)
+        rngs = jax.random.split(rng, config["NUM_SEEDS"])
+        train_vjit = jax.jit(jax.vmap(make_train(ft_config)))
+        t_start = time.time()
+        train_vjit.lower(rngs).compile()
+        print(f"  Finetune compile time: {time.time() - t_start:.1f}s")
+        ft_outs = jax.block_until_ready(train_vjit(rngs))
+        print(f"  Finetune done ({time.time() - t_start:.1f}s total)")
+
+        ft_state = ft_outs["runner_state"][0]
+        ft_params = jax.tree_util.tree_map(lambda x: x[0], ft_state.params)
+        ft_bs = jax.tree_util.tree_map(lambda x: x[0], ft_state.batch_stats)
+
+        score_t0 = evaluate(ft_params, ft_bs, network, t0_env, config, eval_num_episodes)
+        tk_env = _make_eval_env(mod_name)
+        score_tk = evaluate(ft_params, ft_bs, network, tk_env, config, eval_num_episodes)
+        retention = score_t0 / base_score if base_score != 0.0 else float("nan")
+
+        print(
+            f"  score_on_T0={score_t0:.2f}  score_on_Tk={score_tk:.2f}  "
+            f"retention={retention:.3f}"
+        )
+        wandb.log({
+            f"finetune/k{k}/score_on_T0": score_t0,
+            f"finetune/k{k}/score_on_Tk": score_tk,
+            f"finetune/k{k}/retention": retention,
+        })
+        results.append((k, mod_name, base_score, score_t0, score_tk, retention))
+
+    # ------------------------------------------------------------------
+    # Summary table
+    # ------------------------------------------------------------------
+    columns = ["k", "mod_name", "base_score", "finetune_score_T0", "finetune_score_Tk", "retention"]
+    table = wandb.Table(columns=columns)
+    for row in results:
+        table.add_data(*row)
+    wandb.log({"continual_results": table})
+
+    wandb.finish()
+
+
+#TODO:
 # * check status of scaling parameter from paul
 def single_run(config):
 
@@ -798,6 +1036,8 @@ def main(config):
     print("Config:\n", OmegaConf.to_yaml(config))
     if config["HYP_TUNE"]:
         tune(config)
+    elif config.get("CONTINUAL_EXPERIMENT", False):
+        continual_experiment(config)
     else:
         single_run(config)
 
