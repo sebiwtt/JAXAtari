@@ -126,3 +126,11 @@ class SmallPaddleMod(JaxAtariInternalModPlugin):
         "PLAYER_SIZE": (4, 8),
         "PADDLE_MAX_Y": 198.0,
     }
+
+class MidPaddleMod(JaxAtariInternalModPlugin):
+    """Reduces the player paddle height from 16 to 12 pixels.
+    PADDLE_MAX_Y is raised by 4 so the smaller paddle can still reach the same bottom boundary."""
+    constants_overrides = {
+        "PLAYER_SIZE": (4, 12),
+        "PADDLE_MAX_Y": 194.0,
+    }
