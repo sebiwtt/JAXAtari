@@ -441,8 +441,8 @@ def make_train(config):
                                 for k, v in metrics.items()
                             }
                         )
-                    # wandb.log(metrics, step=metrics["update_steps"])
-                    wandb.log(metrics, step=metrics["env_step"])
+                    step_offset = config.get("LOG_STEP_OFFSET", 0)
+                    wandb.log(metrics, step=int(metrics["env_step"]) + int(step_offset))
 
                 jax.debug.callback(callback, metrics, original_rng)
 
@@ -892,10 +892,12 @@ def continual_experiment(config):
     for k, mod_name in enumerate(continual_mods, start=1):
         print(f"\nFinetuning on T{k} ({mod_name})...")
 
-        # Build a fresh config copy with finetuning budget and Tk environment
+        # Build a fresh config copy with finetuning budget and Tk environment.
+        # Offset the wandb step so finetuning curves continue after base training.
         finetune_config = dict(config)
         finetune_config["TOTAL_TIMESTEPS"] = finetune_timesteps
         finetune_config["TRAIN_MODS"] = mod_name
+        finetune_config["LOG_STEP_OFFSET"] = int(config["TOTAL_TIMESTEPS"]) + (k - 1) * int(finetune_timesteps)
 
         train_fn = make_train(finetune_config)
         train_jit = jax.jit(train_fn)
