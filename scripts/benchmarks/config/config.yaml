@@ -5,9 +5,6 @@ SEED: 0
 # if  hyperparameters tuning
 HYP_TUNE: False
 
-# continual RL experiment (set to true via CLI or override config)
-CONTINUAL_EXPERIMENT: True
-
 # wandb params
 WANDB_MODE: "online"  # set to online to activate wandb
 ENTITY: ""
