@@ -5,6 +5,9 @@ SEED: 0
 # if  hyperparameters tuning
 HYP_TUNE: False
 
+# set to true to run continual_experiment() instead of single_run()
+CONTINUAL_EXPERIMENT: False
+
 # wandb params
 WANDB_MODE: "online"  # set to online to activate wandb
 ENTITY: ""

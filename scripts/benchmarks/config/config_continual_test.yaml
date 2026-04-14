@@ -1,0 +1,79 @@
+# Quick-test config for the continual RL experiment on Pong.
+# Keeps training budgets tiny so the full pipeline (base train → evaluate →
+# finetune × N → summary table) can be verified end-to-end in a few minutes.
+#
+# Run with:
+#   python pqn_agent_continual.py --config-name=config_continual_test
+
+# ── meta ──────────────────────────────────────────────────────────────────────
+NUM_SEEDS: 1
+SEED: 0
+HYP_TUNE: False
+CONTINUAL_EXPERIMENT: True
+
+# ── wandb ─────────────────────────────────────────────────────────────────────
+WANDB_MODE: "online"   # flip to "online" when you want to inspect curves
+ENTITY: ""
+PROJECT: "continual_test"
+NAME: "pqn_pong_continual_test"
+
+# ── checkpointing ─────────────────────────────────────────────────────────────
+SAVE_PATH: "./models"
+# LOAD_BASE_CHECKPOINT: "./models/Pong/pqn_pong_pixel_seed0_C0.safetensors"
+
+# ── alg (inlined — no separate alg yaml needed for this test) ─────────────────
+alg:
+  WANDB_LOG_ALL_SEEDS: False
+
+  ALG_NAME: "pqn"
+
+  # Base training: 16 updates × (64 envs × 16 steps) = 16 384 env steps
+  TOTAL_TIMESTEPS: 16384
+  TOTAL_TIMESTEPS_DECAY: 16384    # keep decay schedule aligned with training
+
+  # Finetuning: 8 updates × (64 envs × 16 steps) = 8 192 env steps
+  FINETUNE_TIMESTEPS: 8192
+
+  NUM_ENVS: 64
+  NUM_STEPS: 16           # 64 × 16 = 1024 per update; divisible by NUM_MINIBATCHES
+  NUM_EPOCHS: 1
+  NUM_MINIBATCHES: 8      # minibatch size = 1024 / 8 = 128
+
+  EPS_START: 1.0
+  EPS_FINISH: 0.001
+  EPS_DECAY: 0.1
+  EPS_TEST: 0.0           # greedy evaluation
+
+  NORM_TYPE: "layer_norm"
+  LR: 2.5e-4
+  MAX_GRAD_NORM: 10
+  LR_LINEAR_DECAY: False
+  GAMMA: 0.99
+  LAMBDA: 0.65
+
+  # ── environment ──────────────────────────────────────────────────────────────
+  ENV_NAME: "Pong"
+  ENV_KWARGS: {}
+  OBJECT_CENTRIC: False
+  PIXEL_GRAYSCALE: True
+  PIXEL_RESIZE: True
+  PIXEL_RESIZE_SHAPE: [84, 84]
+  USE_NATIVE_DOWNSCALING: True
+  TRAIN_MODS: null
+  EVAL_MODS: null
+
+  # ── test / video (all off for speed) ─────────────────────────────────────────
+  TEST_DURING_TRAINING: False
+  TEST_INTERVAL: 1.0
+  TEST_NUM_ENVS: 64
+  TEST_NUM_STEPS: 1000
+  RECORD_VIDEO: False
+  RECORD_FINAL_VIDEO: False
+  VIDEO_MAX_STEPS: 500    # max steps per episode in evaluate()
+
+  # ── continual experiment ──────────────────────────────────────────────────────
+  CONTINUAL_MODS:
+    - "small_paddle"   # mod that makes the game harder
+
+  EVAL_NUM_EPISODES: 3    # small number for fast evaluation
+  LOAD_BASE_CHECKPOINT: null
