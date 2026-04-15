@@ -945,7 +945,18 @@ def continual_experiment(config):
     )
     for row in results:
         table.add_data(*row)
-    wandb.log({"continual_results": table})
+
+    retention_table = wandb.Table(columns=["k", "retention"])
+    for k, mod_name, base_score, finetune_score_T0, finetune_score_Tk, retention in results:
+        retention_table.add_data(k, retention)
+
+    wandb.log({
+        "continual_results": table,
+        "retention_curve": wandb.plot.line(
+            retention_table, x="k", y="retention",
+            title="Retention vs Task Index k"
+        ),
+    })
 
     wandb.finish()
 
