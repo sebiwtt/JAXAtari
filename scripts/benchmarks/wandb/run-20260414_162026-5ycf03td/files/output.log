@@ -1,0 +1,9 @@
+Training base agent on T0...
+Base checkpoint C0 saved to ./models/Pong/pqn_Pong_oc_seed0_C0.safetensors
+Base score on T0: 19.00
+
+Finetuning on T1 (small_paddle)...
+  score_on_T0=16.00, score_on_Tk=17.00, retention=0.842
+
+Finetuning on T2 (mid_paddle)...
+  score_on_T0=16.00, score_on_Tk=14.00, retention=0.842

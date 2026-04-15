@@ -925,7 +925,7 @@ def continual_experiment(config):
 
         print(
             f"  score_on_T0={finetune_score_T0:.2f}, "
-            f"score_on_Tk={finetune_score_Tk:.2f}, "
+            f"score_on_T{k}={finetune_score_Tk:.2f}, "
             f"retention={retention:.3f}"
         )
 

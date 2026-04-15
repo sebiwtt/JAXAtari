@@ -1,0 +1,1 @@
+{"columns": ["k", "mod_name", "base_score", "finetune_score_T0", "finetune_score_Tk", "retention"], "data": [[1, "small_paddle", 19.0, 16.0, 17.0, 0.8421052631578947], [2, "mid_paddle", 19.0, 16.0, 14.0, 0.8421052631578947]]}

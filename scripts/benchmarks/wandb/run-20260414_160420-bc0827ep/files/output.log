@@ -1,0 +1,46 @@
+Training base agent on T0...
+Base checkpoint C0 saved to ./models/Pong/pqn_Pong_oc_seed0_C0.safetensors
+Traceback (most recent call last):
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent_continual.py", line 1013, in <module>
+    main()
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/main.py", line 94, in decorated_main
+    _run_hydra(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 457, in _run_app
+    run_and_report(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 220, in run_and_report
+    return func()
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 458, in <lambda>
+    lambda: hydra.run(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/hydra.py", line 119, in run
+    ret = run_job(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent_continual.py", line 1007, in main
+    continual_experiment(config)
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent_continual.py", line 884, in continual_experiment
+    base_score = evaluate(base_params, base_batch_stats, network, t0_env, config, eval_num_episodes)
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent_continual.py", line 563, in evaluate
+    jax.random.randint(rng_a, shape=(), minval=0, maxval=q_vals.shape[-1]),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/random.py", line 489, in randint
+    key, _ = _check_prng_key("randint", key)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/random.py", line 80, in _check_prng_key
+    wrapped_key = prng.random_wrap(key, impl=default_prng_impl())
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/prng.py", line 727, in random_wrap
+    return random_wrap_p.bind(base_arr, impl=impl)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/core.py", line 536, in bind
+    return self._true_bind(*args, **params)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/core.py", line 552, in _true_bind
+    return self.bind_with_trace(prev_trace, args, params)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/core.py", line 562, in bind_with_trace
+    return trace.process_primitive(self, args, params)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/core.py", line 1066, in process_primitive
+    return primitive.impl(*args, **params)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/prng.py", line 740, in random_wrap_impl
+    return PRNGKeyArray(impl, base_arr)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/prng.py", line 166, in __init__
+    _check_prng_key_data(impl, key_data)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/prng.py", line 129, in _check_prng_key_data
+    if not all(hasattr(key_data, attr) for attr in ['ndim', 'shape', 'dtype']):
+KeyboardInterrupt
