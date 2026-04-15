@@ -119,18 +119,17 @@ class NoFireMod(JaxAtariInternalModPlugin):
     }
 
 
-class SmallPaddleMod(JaxAtariInternalModPlugin):
-    """Reduces the player paddle height from 16 to 8 pixels, making the game harder.
-    PADDLE_MAX_Y is raised by 8 so the smaller paddle can still reach the same bottom boundary."""
-    constants_overrides = {
-        "PLAYER_SIZE": (4, 8),
-        "PADDLE_MAX_Y": 198.0,
-    }
+class PaddleSize14Mod(JaxAtariInternalModPlugin):
+    constants_overrides = {"PLAYER_SIZE": (4, 14), "PADDLE_MAX_Y": 192.0}
 
-class MidPaddleMod(JaxAtariInternalModPlugin):
-    """Reduces the player paddle height from 16 to 12 pixels.
-    PADDLE_MAX_Y is raised by 4 so the smaller paddle can still reach the same bottom boundary."""
-    constants_overrides = {
-        "PLAYER_SIZE": (4, 12),
-        "PADDLE_MAX_Y": 194.0,
-    }
+class PaddleSize12Mod(JaxAtariInternalModPlugin):
+    constants_overrides = {"PLAYER_SIZE": (4, 12), "PADDLE_MAX_Y": 194.0}
+
+class PaddleSize10Mod(JaxAtariInternalModPlugin):
+    constants_overrides = {"PLAYER_SIZE": (4, 10), "PADDLE_MAX_Y": 196.0}
+
+class PaddleSize8Mod(JaxAtariInternalModPlugin):
+    constants_overrides = {"PLAYER_SIZE": (4, 8), "PADDLE_MAX_Y": 198.0}
+
+class PaddleSize6Mod(JaxAtariInternalModPlugin):
+    constants_overrides = {"PLAYER_SIZE": (4, 6), "PADDLE_MAX_Y": 200.0}
