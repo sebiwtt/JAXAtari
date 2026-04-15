@@ -1,0 +1,12 @@
+{"time":"2026-04-13T13:32:14.015083493+02:00","level":"INFO","msg":"wandb-core"}
+{"time":"2026-04-13T13:32:14.023126242+02:00","level":"INFO","msg":"stream: starting","core version":"0.25.1"}
+{"time":"2026-04-13T13:32:14.411567811+02:00","level":"INFO","msg":"stream: created new stream","id":"o3nr2xbr"}
+{"time":"2026-04-13T13:32:14.413196747+02:00","level":"INFO","msg":"handler: started"}
+{"time":"2026-04-13T13:32:14.413327734+02:00","level":"INFO","msg":"stream: started"}
+{"time":"2026-04-13T13:32:14.413650609+02:00","level":"INFO","msg":"sender: started"}
+{"time":"2026-04-13T13:32:14.413654979+02:00","level":"INFO","msg":"writer: started","stream_id":"o3nr2xbr"}
+{"time":"2026-04-13T13:32:17.999841079+02:00","level":"INFO","msg":"filestream: sending request","total_files":1,"console_offset":0,"console_lines":1}
+{"time":"2026-04-13T13:32:18.016025961+02:00","level":"INFO","msg":"flowcontrol: backed up, offloading to disk","recordNumber":171}
+{"time":"2026-04-13T13:32:18.016585358+02:00","level":"INFO","msg":"stream: closing"}
+{"time":"2026-04-13T13:32:18.021960061+02:00","level":"INFO","msg":"flowcontrol: unblocked","totalOffloaded":22}
+{"time":"2026-04-13T13:32:18.335599264+02:00","level":"INFO","msg":"filestream: request sent","status":"200 OK"}

@@ -1,0 +1,185 @@
+Traceback (most recent call last):
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent.py", line 806, in <module>
+    main()
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/main.py", line 94, in decorated_main
+    _run_hydra(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 457, in _run_app
+    run_and_report(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 220, in run_and_report
+    return func()
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 458, in <lambda>
+    lambda: hydra.run(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/hydra.py", line 119, in run
+    ret = run_job(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent.py", line 802, in main
+    single_run(config)
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent.py", line 702, in single_run
+    train_vjit.lower(rngs).compile()
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent.py", line 519, in train
+    expl_state = jax.vmap(env.reset)(jax.random.split(_rng, config["NUM_ENVS"]))
+  File "/home/swette/JAXAtari/src/jaxatari/wrappers.py", line 942, in reset
+    obs, atari_state = self._env.reset(key)
+  File "/home/swette/JAXAtari/src/jaxatari/wrappers.py", line 910, in reset
+    obs, state = self._env.reset(key)
+  File "/home/swette/JAXAtari/src/jaxatari/wrappers.py", line 805, in reset
+    obs, state = self._env.reset(key)
+  File "/home/swette/JAXAtari/src/jaxatari/wrappers.py", line 292, in reset
+    obs, atari_state = self._env.reset(key)
+  File "/home/swette/JAXAtari/src/jaxatari/wrappers.py", line 166, in reset
+    env_state, obs, step = jax.lax.cond(
+  File "/home/swette/JAXAtari/src/jaxatari/wrappers.py", line 168, in <lambda>
+    lambda carry: perform_noop_reset(carry),
+  File "/home/swette/JAXAtari/src/jaxatari/wrappers.py", line 159, in perform_noop_reset
+    final_obs, final_env_state = jax.lax.fori_loop(0, num_noops, noop_body_fn, (obs, env_state))
+  File "/home/swette/JAXAtari/src/jaxatari/wrappers.py", line 149, in noop_body_fn
+    next_obs, next_env_state, reward, done, info = self._env.step(current_env_state, Action.NOOP)
+  File "/home/swette/JAXAtari/src/jaxatari/games/jax_pong.py", line 414, in step
+    state = self._ball_step(state, atari_action)
+  File "/home/swette/JAXAtari/src/jaxatari/games/jax_pong.py", line 201, in _ball_step
+    ball_y < state.player_y + section_height,
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/numpy/array_methods.py", line 1083, in op
+    return getattr(self.aval, f"_{name}")(self, *args)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/numpy/array_methods.py", line 583, in deferring_binary_op
+    return binary_op(*args)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/numpy/ufunc_api.py", line 182, in __call__
+    return call(*args)
+jax._src.source_info_util.JaxStackTraceBeforeTransformation: KeyboardInterrupt
+
+The preceding stack trace is the source of the JAX operation that, once transformed by JAX, triggered the following exception.
+
+--------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent.py", line 806, in <module>
+    main()
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/main.py", line 94, in decorated_main
+    _run_hydra(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 394, in _run_hydra
+    _run_app(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 457, in _run_app
+    run_and_report(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 220, in run_and_report
+    return func()
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/utils.py", line 458, in <lambda>
+    lambda: hydra.run(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/_internal/hydra.py", line 119, in run
+    ret = run_job(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent.py", line 802, in main
+    single_run(config)
+  File "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent.py", line 702, in single_run
+    train_vjit.lower(rngs).compile()
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/traceback_util.py", line 182, in reraise_with_filtered_traceback
+    return fun(*args, **kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 348, in jit_lower
+    return jit_trace(jit_func, *args, **kwargs).lower()
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/stages.py", line 719, in lower
+    lowering = new_callable()
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 1813, in _resolve_and_lower
+    return _pjit_lower(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 1931, in _pjit_lower
+    return _pjit_lower_cached(*args, **kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 1951, in _pjit_lower_cached
+    return pxla.lower_sharding_computation(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/profiler.py", line 354, in wrapper
+    return func(*args, **kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/pxla.py", line 2321, in lower_sharding_computation
+    nreps, tuple_args, shape_poly_state) = _cached_lowering_to_hlo(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/pxla.py", line 1912, in _cached_lowering_to_hlo
+    lowering_result = mlir.lower_jaxpr_to_module(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 1274, in lower_jaxpr_to_module
+    lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 1766, in lower_jaxpr_to_fun
+    out_vals, tokens_out = jaxpr_subcomp(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2043, in jaxpr_subcomp
+    ans = lower_per_platform(rule_ctx, str(eqn.primitive),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2165, in lower_per_platform
+    output = kept_rules[0](ctx, *rule_args, **rule_kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2124, in _pjit_lowering
+    func = _pjit_cached_lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2100, in _pjit_cached_lower_jaxpr_to_fun
+    func = mlir.lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 1766, in lower_jaxpr_to_fun
+    out_vals, tokens_out = jaxpr_subcomp(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2043, in jaxpr_subcomp
+    ans = lower_per_platform(rule_ctx, str(eqn.primitive),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2165, in lower_per_platform
+    output = kept_rules[0](ctx, *rule_args, **rule_kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2124, in _pjit_lowering
+    func = _pjit_cached_lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2100, in _pjit_cached_lower_jaxpr_to_fun
+    func = mlir.lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 1766, in lower_jaxpr_to_fun
+    out_vals, tokens_out = jaxpr_subcomp(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2043, in jaxpr_subcomp
+    ans = lower_per_platform(rule_ctx, str(eqn.primitive),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2165, in lower_per_platform
+    output = kept_rules[0](ctx, *rule_args, **rule_kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2124, in _pjit_lowering
+    func = _pjit_cached_lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2100, in _pjit_cached_lower_jaxpr_to_fun
+    func = mlir.lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 1766, in lower_jaxpr_to_fun
+    out_vals, tokens_out = jaxpr_subcomp(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2043, in jaxpr_subcomp
+    ans = lower_per_platform(rule_ctx, str(eqn.primitive),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2165, in lower_per_platform
+    output = kept_rules[0](ctx, *rule_args, **rule_kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2124, in _pjit_lowering
+    func = _pjit_cached_lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2100, in _pjit_cached_lower_jaxpr_to_fun
+    func = mlir.lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 1766, in lower_jaxpr_to_fun
+    out_vals, tokens_out = jaxpr_subcomp(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2043, in jaxpr_subcomp
+    ans = lower_per_platform(rule_ctx, str(eqn.primitive),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2165, in lower_per_platform
+    output = kept_rules[0](ctx, *rule_args, **rule_kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2124, in _pjit_lowering
+    func = _pjit_cached_lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2100, in _pjit_cached_lower_jaxpr_to_fun
+    func = mlir.lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 1766, in lower_jaxpr_to_fun
+    out_vals, tokens_out = jaxpr_subcomp(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2043, in jaxpr_subcomp
+    ans = lower_per_platform(rule_ctx, str(eqn.primitive),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2165, in lower_per_platform
+    output = kept_rules[0](ctx, *rule_args, **rule_kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/lax/control_flow/conditionals.py", line 1001, in _cond_lowering
+    out_vals, tokens_out = mlir.jaxpr_subcomp(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2043, in jaxpr_subcomp
+    ans = lower_per_platform(rule_ctx, str(eqn.primitive),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2165, in lower_per_platform
+    output = kept_rules[0](ctx, *rule_args, **rule_kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/lax/control_flow/loops.py", line 2193, in _while_lowering
+    new_z, tokens_out = mlir.jaxpr_subcomp(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2043, in jaxpr_subcomp
+    ans = lower_per_platform(rule_ctx, str(eqn.primitive),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2165, in lower_per_platform
+    output = kept_rules[0](ctx, *rule_args, **rule_kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2124, in _pjit_lowering
+    func = _pjit_cached_lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/pjit.py", line 2100, in _pjit_cached_lower_jaxpr_to_fun
+    func = mlir.lower_jaxpr_to_fun(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 1766, in lower_jaxpr_to_fun
+    out_vals, tokens_out = jaxpr_subcomp(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2043, in jaxpr_subcomp
+    ans = lower_per_platform(rule_ctx, str(eqn.primitive),
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2165, in lower_per_platform
+    output = kept_rules[0](ctx, *rule_args, **rule_kwargs)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/lax/lax.py", line 4068, in _nary_lower_hlo
+    args = mlir.multi_broadcast_in_dim(ctx, args, avals_in, aval_out.shape)
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2483, in multi_broadcast_in_dim
+    out.append(broadcast_in_dim(ctx, op,
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py", line 2464, in broadcast_in_dim
+    out = hlo.broadcast_in_dim(
+  File "/home/swette/JAXAtari/.venv/lib/python3.10/site-packages/jaxlib/mlir/dialects/_stablehlo_ops_gen.py", line 737, in broadcast_in_dim
+    return BroadcastInDimOp(result=result, operand=operand, broadcast_dimensions=broadcast_dimensions, loc=loc, ip=ip).result
+KeyboardInterrupt

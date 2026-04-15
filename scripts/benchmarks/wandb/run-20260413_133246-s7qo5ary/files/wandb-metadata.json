@@ -1,0 +1,64 @@
+{
+  "os": "Linux-5.15.0-174-generic-x86_64-with-glibc2.35",
+  "python": "CPython 3.10.12",
+  "startedAt": "2026-04-13T11:32:46.213869Z",
+  "args": [
+    "+alg=pqn_short_eval_run_object"
+  ],
+  "program": "/home/swette/JAXAtari/scripts/benchmarks/pqn_agent.py",
+  "codePath": "scripts/benchmarks/pqn_agent.py",
+  "codePathLocal": "pqn_agent.py",
+  "git": {
+    "remote": "https://github.com/sebiwtt/JAXAtari.git",
+    "commit": "4d084c2a9bcd8a84b59055ebadc3e0c37f36ab53"
+  },
+  "email": "sebastian.wette@stud.tu-darmstadt.de",
+  "root": "/home/swette/JAXAtari/scripts/benchmarks",
+  "host": "labmeles",
+  "executable": "/home/swette/JAXAtari/.venv/bin/python3",
+  "cpu_count": 32,
+  "cpu_count_logical": 64,
+  "gpu": "NVIDIA RTX A6000",
+  "gpu_count": 4,
+  "disk": {
+    "/": {
+      "total": "471413596160",
+      "used": "117893341184"
+    }
+  },
+  "memory": {
+    "total": "540870406144"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere",
+      "uuid": "GPU-cac8d617-acdd-4111-8975-6c300de43183"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere",
+      "uuid": "GPU-3914cfa6-2309-4126-1c8a-16d7da493b09"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere",
+      "uuid": "GPU-bcab4f5a-a96e-99c5-4326-ec257965f401"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere",
+      "uuid": "GPU-cb2cca7d-3ea0-4eed-9fa8-0a5c8351094a"
+    }
+  ],
+  "cudaVersion": "12.2",
+  "writerId": "rxgdvbl8ynytwt27peox7vbao9aspuh0"
+}

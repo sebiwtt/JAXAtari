@@ -1,0 +1,24 @@
+2026-04-14 15:55:02,859 INFO    MainThread:2603551 [wandb_setup.py:_flush():81] Current SDK version is 0.25.1
+2026-04-14 15:55:02,863 INFO    MainThread:2603551 [wandb_setup.py:_flush():81] Configure stats pid to 2603551
+2026-04-14 15:55:02,863 INFO    MainThread:2603551 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-04-14 15:55:02,863 INFO    MainThread:2603551 [wandb_init.py:setup_run_log_directory():717] Logging user logs to /home/swette/JAXAtari/scripts/benchmarks/wandb/run-20260414_155502-ck7ong3h/logs/debug.log
+2026-04-14 15:55:02,863 INFO    MainThread:2603551 [wandb_init.py:setup_run_log_directory():718] Logging internal logs to /home/swette/JAXAtari/scripts/benchmarks/wandb/run-20260414_155502-ck7ong3h/logs/debug-internal.log
+2026-04-14 15:55:02,863 INFO    MainThread:2603551 [wandb_init.py:init():844] calling init triggers
+2026-04-14 15:55:02,863 INFO    MainThread:2603551 [wandb_init.py:init():849] wandb.init called with sweep_config: {}
+config: {'NUM_SEEDS': 1, 'SEED': 0, 'HYP_TUNE': False, 'CONTINUAL_EXPERIMENT': True, 'WANDB_MODE': 'online', 'ENTITY': '', 'PROJECT': 'continual_test', 'NAME': 'pqn_pong_continual_test', 'SAVE_PATH': './models', 'alg': {'WANDB_LOG_ALL_SEEDS': False, 'ALG_NAME': 'pqn', 'TOTAL_TIMESTEPS': 16384, 'TOTAL_TIMESTEPS_DECAY': 16384, 'FINETUNE_TIMESTEPS': 8192, 'NUM_ENVS': 64, 'NUM_STEPS': 16, 'NUM_EPOCHS': 1, 'NUM_MINIBATCHES': 8, 'EPS_START': 1.0, 'EPS_FINISH': 0.001, 'EPS_DECAY': 0.1, 'EPS_TEST': 0.0, 'NORM_TYPE': 'layer_norm', 'LR': 0.00025, 'MAX_GRAD_NORM': 10, 'LR_LINEAR_DECAY': False, 'GAMMA': 0.99, 'LAMBDA': 0.65, 'ENV_NAME': 'Pong', 'ENV_KWARGS': {}, 'OBJECT_CENTRIC': False, 'PIXEL_GRAYSCALE': True, 'PIXEL_RESIZE': True, 'PIXEL_RESIZE_SHAPE': [84, 84], 'USE_NATIVE_DOWNSCALING': True, 'TRAIN_MODS': None, 'EVAL_MODS': None, 'TEST_DURING_TRAINING': False, 'TEST_INTERVAL': 1.0, 'TEST_NUM_ENVS': 64, 'TEST_NUM_STEPS': 1000, 'RECORD_VIDEO': False, 'RECORD_FINAL_VIDEO': False, 'VIDEO_MAX_STEPS': 500, 'CONTINUAL_MODS': ['small_paddle'], 'EVAL_NUM_EPISODES': 3, 'LOAD_BASE_CHECKPOINT': None}, 'WANDB_LOG_ALL_SEEDS': False, 'ALG_NAME': 'pqn', 'TOTAL_TIMESTEPS': 16384, 'TOTAL_TIMESTEPS_DECAY': 16384, 'FINETUNE_TIMESTEPS': 8192, 'NUM_ENVS': 64, 'NUM_STEPS': 16, 'NUM_EPOCHS': 1, 'NUM_MINIBATCHES': 8, 'EPS_START': 1.0, 'EPS_FINISH': 0.001, 'EPS_DECAY': 0.1, 'EPS_TEST': 0.0, 'NORM_TYPE': 'layer_norm', 'LR': 0.00025, 'MAX_GRAD_NORM': 10, 'LR_LINEAR_DECAY': False, 'GAMMA': 0.99, 'LAMBDA': 0.65, 'ENV_NAME': 'Pong', 'ENV_KWARGS': {}, 'OBJECT_CENTRIC': False, 'PIXEL_GRAYSCALE': True, 'PIXEL_RESIZE': True, 'PIXEL_RESIZE_SHAPE': [84, 84], 'USE_NATIVE_DOWNSCALING': True, 'TRAIN_MODS': None, 'EVAL_MODS': None, 'TEST_DURING_TRAINING': False, 'TEST_INTERVAL': 1.0, 'TEST_NUM_ENVS': 64, 'TEST_NUM_STEPS': 1000, 'RECORD_VIDEO': False, 'RECORD_FINAL_VIDEO': False, 'VIDEO_MAX_STEPS': 500, 'CONTINUAL_MODS': ['small_paddle'], 'EVAL_NUM_EPISODES': 3, 'LOAD_BASE_CHECKPOINT': None, '_wandb': {}}
+2026-04-14 15:55:02,863 INFO    MainThread:2603551 [wandb_init.py:init():892] starting backend
+2026-04-14 15:55:03,079 INFO    MainThread:2603551 [wandb_init.py:init():895] sending inform_init request
+2026-04-14 15:55:03,084 INFO    MainThread:2603551 [wandb_init.py:init():903] backend started and connected
+2026-04-14 15:55:03,086 INFO    MainThread:2603551 [wandb_init.py:init():973] updated telemetry
+2026-04-14 15:55:03,093 INFO    MainThread:2603551 [wandb_init.py:init():997] communicating run to backend with 90.0 second timeout
+2026-04-14 15:55:03,943 INFO    MainThread:2603551 [wandb_init.py:init():1042] starting run threads in backend
+2026-04-14 15:55:04,046 INFO    MainThread:2603551 [wandb_run.py:_console_start():2524] atexit reg
+2026-04-14 15:55:04,046 INFO    MainThread:2603551 [wandb_run.py:_redirect():2373] redirect: wrap_raw
+2026-04-14 15:55:04,047 INFO    MainThread:2603551 [wandb_run.py:_redirect():2442] Wrapping output streams.
+2026-04-14 15:55:04,047 INFO    MainThread:2603551 [wandb_run.py:_redirect():2465] Redirects installed.
+2026-04-14 15:55:04,049 INFO    MainThread:2603551 [wandb_init.py:init():1082] run started, returning control to user process
+2026-04-14 15:58:07,847 INFO    MainThread:2603551 [wandb_run.py:_finish():2291] finishing run sebastian-wette-tu-darmstadt/continual_test/ck7ong3h
+2026-04-14 15:58:07,848 INFO    MainThread:2603551 [wandb_run.py:_atexit_cleanup():2490] got exitcode: 0
+2026-04-14 15:58:07,848 INFO    MainThread:2603551 [wandb_run.py:_restore():2472] restore
+2026-04-14 15:58:07,849 INFO    MainThread:2603551 [wandb_run.py:_restore():2478] restore done
+2026-04-14 15:58:10,938 INFO    MainThread:2603551 [wandb_run.py:_footer_sync_info():3868] logging synced files

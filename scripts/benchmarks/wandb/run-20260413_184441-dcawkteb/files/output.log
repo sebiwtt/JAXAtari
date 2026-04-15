@@ -1,0 +1,10 @@
+Compile time: 24.926369190216064 seconds.
+Run time: 7197.024354457855 seconds.
+Total: 7221.951500415802 seconds.
+Model saved to ./models/Pong
+Generating final videos for seed 0...
+Final video (train): 1000 frames, total reward: 10.0
+m[2K[1mwandb[0m: [38;5;178m⣽[0m Encoding video...
+Video 'train' logged to wandb.
+Final video (small_paddle): 1000 frames, total reward: 12.0
+Video 'small_paddle' logged to wandb.

@@ -1,0 +1,14 @@
+Training base agent on T0...
+Base checkpoint C0 saved to ./models/Pong/pqn_Pong_pixel_seed0_C0.safetensors
+Base score on T0: -13.00
+
+Finetuning on T1 (small_paddle)...
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 1024 that is less than the current step 16385. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 2048 that is less than the current step 16385. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 3072 that is less than the current step 16385. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 4096 that is less than the current step 16385. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 5120 that is less than the current step 16385. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 6144 that is less than the current step 16385. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 7168 that is less than the current step 16385. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 8192 that is less than the current step 16385. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+  score_on_T0=-13.00, score_on_Tk=-13.00, retention=1.000

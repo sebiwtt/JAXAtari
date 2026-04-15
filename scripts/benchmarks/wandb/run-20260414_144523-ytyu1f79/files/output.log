@@ -1,0 +1,13 @@
+Training base agent on T0 …
+  Base compile time: 13.6s
+  Base training done (75.6s total)
+  C0 saved to ./models/Pong/pqn_Pong_C0.safetensors
+Base score on T0: 20.45
+
+=== T1: small_paddle ===
+  Finetune compile time: 10.8s
+  Finetune done (11.3s total)
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 131072 that is less than the current step 49938433. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 262144 that is less than the current step 49938433. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+[34m[1mwandb[0m: [33mWARNING[0m Tried to log to step 393216 that is less than the current step 49938433. Steps must be monotonically increasing, so this data will be ignored. See https://wandb.me/define-metric to log data out of order.
+  score_on_T0=-19.70  score_on_Tk=-18.90  retention=-0.963
